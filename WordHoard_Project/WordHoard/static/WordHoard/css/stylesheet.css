@@ -1,0 +1,42 @@
+#app {
+	background: #FCFCFD;
+	#5077A7;
+}
+
+#title{
+	color: #5077A7;
+	text-align: center;
+	font-family: 'Cinzel Decorative', serif;
+}
+
+#title2{
+	color: #5077A7;
+	text-align: center;
+	font-family: 'UnifrakturCook', serif;
+}
+
+#search_field{
+	 position: relative;
+	 display: block;
+	 margin: 0 auto;
+
+}
+
+#search{
+	position: relative;
+	display: block;
+	margin: 0 auto;
+}
+
+#search_container{
+	margin-top: 1in;
+	margin-left: 2in;
+	margin-right: 2in;
+	overflow: hidden visible; 
+	/*border: solid;*/
+	width: 800px;
+	padding: 1em;
+	max-height: 600px
+	
+	
+}
