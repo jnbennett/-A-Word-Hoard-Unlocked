@@ -1,57 +1,125 @@
 {% load static %}
 <!DOCTYPE html>
-<html>
+<html lang='en'>
 <head>
+	    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
 	<title>A Word-Hoard Unlocked</title>
+
 	<link href="https://fonts.googleapis.com/css?family=Cinzel+Decorative|UnifrakturCook:700|UnifrakturMaguntia&display=swap" rel="stylesheet">
-	
+	<link rel="stylesheet" href="https://unpkg.com/vue-multiselect@2.1.0/dist/vue-multiselect.min.css">
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 	<link rel='stylesheet' href='{% static "WordHoard/css/stylesheet.css" %}'>
+	
 </head>
 <body>
 
-	<div id='app'>
+	<div class='container-fluid' id='app'>
+	<div id='banner'>
 		<h1 id='title'>${ message }</h1>
-		<div>
-			{# <label for='authors'>Author:</label> #}
-			<select v-model='author' id='authorsList'>
-				{# <input list='authors' v-model='author'> #}
-				{# <datalist id='authors'> #}
-				<option disabled>Select an Author(s)</option>
-				<option v-for='author in authors' v-bind:value='author.value'>${ author.first_name +' '+author.last_name }</option>
-				{# </datalist> #}
-			</select>
+		<div class='row'>
+			<div class='col-sm'>
+				<label >Author:</label>
+				<multiselect v-model='timePeriod' 
+					placeholder='Select a time period...'
+					v-bind:options='timePeriods'
+					:custom-label='timePeriodLabel'
+					:multiple='true'
+					:close-on-select="false" 
+					:clear-on-select="false"
+					:preserve-search="true"
+					:preselect-first="true"
+					>
+				</multiselect>	
+			</div>
+			<div class='col-sm'>
+				<label >Author:</label>
+				<multiselect v-model='author' 
+					placeholder='Select an author...'
+					v-bind:options='authors'
+					:custom-label='authorLabel'
+					@select='getTexts'
+					:multiple='true'
+					track-by='pk'
+					:close-on-select="false" 
+					:clear-on-select="false"
+					:preserve-search="true"
+					:preselect-first="true"
+					@hook:updated='getTexts'
+					>
+				</multiselect>	
+			</div>
+			<div class='col-sm'>
+				<label>Text:</label>
+				<multiselect v-model='text' 
+					id='textList'
+					placeholder='Select a text...'
+					v-bind:options='currentTexts'
+					:custom-label='textLabel'
+					:multiple='true'
+					:close-on-select="false" 
+					:clear-on-select="false"
+					:preserve-search="true"
+					:preselect-first="true"
+					track-by='title'
+					>
+				</multiselect>
+			</div>
+				
 		</div>
-		<div>
-			<input type='text' 
-					id='search_field'
-					size='100' 
-					placeholder="Enter a word to search for..." 
+		<div class="input-group mb-3 row">
+			<input 	class='form-control'
+					type='text' 
+					id='searchWord'
+					size='100'
+					placeholder="Search a word..." 
 					v-model:value='word'
 					>
-
-			<button type='button' id='search'
-				v-on:click="searchWords">
-				Search
-			</button>
+			<div class="input-group-append">
+    			<button class="btn btn-outline-secondary" 
+    				type="button" 
+    				id="button-addon2"
+    				v-on:click="searchWords">Search
+    			</button>
+  			</div>
 		</div>
+	</div>
 		<div id='search_container'>
-			<div>
+			<div class='displaySearch'>
 				<h2> ${ searchDisplay['word'] }</h2>
 			</div>
-			<div>
-				<li v-for='item in searchDisplay.sentences' id='search_results'>
-					${ item }
-				</li>
+			<div class='displaySearch'>
+				<div v-for='text in searchDisplay'>
+					<p>
+						${text.author} 
+					</p>
+					<p>
+						${ text.text }
+					</p>
+					 <li v-for='sentences in text.sentences'>
+					 	${ sentences }
+					</li>
+					<p>
+						Word Count: ${ text.count }
+					</p>
+				</div>
 			</div>
-			<div>
-				<h2> ${ searchDisplay['count']}</h2>
+			<div class='displaySearch'>
+				<h2 id='wordCount'>${ searchDisplay['count']}</h2>
 			</div>
 		</div>
 	</div>
-
+	<div class='footer'>
+	</div>
+	
 
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="https://unpkg.com/vue-multiselect@2.1.0"></script>
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 <script src='{% static "WordHoard/js/script.js" %}'></script>
 </body>
 </html>

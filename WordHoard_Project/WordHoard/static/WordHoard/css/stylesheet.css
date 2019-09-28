@@ -1,42 +1,63 @@
-#app {
-	background: #FCFCFD;
-	#5077A7;
+html, body {
+	width: 100%;
+	margin: 0;
+}
+
+.container-fluid{
+	background-color: #FCFCFD;
+	padding: 0;
+}
+
+#banner{
+	background-color: #5077A7;
+	height: 275px;
+	width: 100%;
 }
 
 #title{
-	color: #5077A7;
+	/*color: #5077A7;*/
+	color: #FCFCFD;
 	text-align: center;
 	font-family: 'Cinzel Decorative', serif;
+	font-size: 50px;
+	padding-top: 1em;
 }
 
 #title2{
-	color: #5077A7;
+	/*color: #5077A7;*/
+	color: #FCFCFD;
 	text-align: center;
 	font-family: 'UnifrakturCook', serif;
 }
 
-#search_field{
-	 position: relative;
-	 display: block;
-	 margin: 0 auto;
-
+.multiselect {
+	width: 50%;
+	margin:1em;
+	position: relative;
 }
 
-#search{
-	position: relative;
-	display: block;
-	margin: 0 auto;
+.input-group{
+	width: 50%;
+	margin-left: 20em;
+}
+
+#button-addon2{
+	background-color: #FCFCFD;
 }
 
 #search_container{
 	margin-top: 1in;
 	margin-left: 2in;
 	margin-right: 2in;
-	overflow: hidden visible; 
-	/*border: solid;*/
 	width: 800px;
 	padding: 1em;
-	max-height: 600px
-	
-	
+	max-height: 600px	
 }
+
+}
+.footer{
+	background-color: #5077A7;
+	height:40px;
+	width: 100%;
+	position: fixed;
+	bottom:0;

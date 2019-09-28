@@ -24,15 +24,28 @@ class TextViewSet(viewsets.ModelViewSet):
 	"""
 	API endpoint to allow texts to be viewed
 	"""
-	queryset = Text.objects.filter()
+	queryset = Text.objects.all()
 	serializer_class = TextSerializer
+
 
 def search(request):
 	
 	if request.method == 'POST':
 		data = json.loads(request.body)
-		print(data)
-		texts = Text.objects.filter(author=data['author']['pk'])
+		# my_filters = {}
+		text_keys = [item['pk'] for item in data['text']]
+		author_keys = [item['pk'] for item in data['author']]
+		# print(data)
+		# print(text_keys)
+		# print(author_keys)
+
+		if data['author']:
+			texts = Text.objects.filter(author__in=author_keys)
+			# print(texts)
+		if data['text']:
+			texts = Text.objects.filter(pk__in=text_keys)
+			# print(texts)
+		search_results = []
 		for text in texts:
 			with open(text.txt_file.path) as f:
 				read = f.read()
@@ -40,14 +53,17 @@ def search(request):
 				word_search = occurence(read, data['word'])
 				count = word_count(read, data['word'])
 				
-				search_results = {
-					'author': data.get('author'),
-					'text': data.get('text'),
+				results = {
+					'author': text.author.first_name +' '+ text.author.last_name,
+					'text': text.title,
 					'word': data.get('word'),
 					'sentences': word_search,
 					'count': count,
 					}
-				return JsonResponse(search_results, safe=False)
+				search_results.append(results)
+				print(results['author'])
+		return JsonResponse(search_results, safe=False)
+	# return JsonResponse(search_results, safe=False)
 	return HttpResponse(201)
 
 
