@@ -17,6 +17,9 @@ const app = new Vue({
 		authors: [],
 		timePeriods: [],
 		currentTexts:[],
+		currentAuthors:[],
+		searchType: 'Phrase',
+		phrase: [],
 	},
 	methods: {
 
@@ -37,17 +40,52 @@ const app = new Vue({
 			return `${first_name} ${last_name}`
 		},
 
+		getAuthors: function(){
+			this.$nextTick(()=>{
+				const timeP = this.texts.filter((text)=>this.timePeriod.includes(text.time_period))		
+				
+				const authTimePeriod = timeP.map(auth=>auth.time_period)
+							
+				const updatedAuthors = this.texts.filter((text)=>this.timePeriod.includes(text.time_period))
+				
+				const authPK = updatedAuthors.map(auth=>auth.author)
+
+				this.currentAuthors = this.authors.filter((auth)=>authPK.includes(auth.pk))
+
+
+				if(this.timePeriod == 0){
+					this.currentAuthors = this.authors
+				}
+
+
+
+				// this.author = this.texts.filter((auth)=>authorTimePeriod.includes(auth.time_period))
+			})
+		},
+
 		getTexts: function() {
 			this.$nextTick(()=>{
 
-			let authorPks = this.author.map(auth => auth.pk)
-			;
+			let authorPks = this.author.map(auth => auth.pk);
+			updatedTimePeriod = this.texts.filter((text)=>this.timePeriod.includes(text.time_period))
+			let textTimePeriod = updatedTimePeriod.map(text=>text.time_period)
+			
+		
+			// write conditionals to run whether time period or author is selected
+			if (this.timePeriod != 0){
+				this.currentTexts = this.texts.filter((text)=>textTimePeriod.includes(text.time_period))
+				
+			}
 
-			this.currentTexts = this.texts.filter((text)=>authorPks.includes(text.author));
-
-			if (this.author == 0){
+			else {
 			 	this.currentTexts = this.texts
 			 }
+
+
+			if (this.author != 0){
+				this.currentTexts = this.texts.filter((text)=>authorPks.includes(text.author));
+			}
+
 			});
 			
 			// this.texts = this.texts.filter(text => this.author) 
@@ -91,11 +129,12 @@ const app = new Vue({
 		},
 
 		grabTimePeriod(){
-			this.timePeriods = this.texts.map(period => period.time_period)
-			
+			const periods = this.texts.map(period => period.time_period)
+			this.timePeriods = [...new Set(periods)]	
+		
 		},
 
-		timePeriodLabel({period}){
+		timePeriodLabel(period){
 			return `${period}`
 		},
 
@@ -103,19 +142,75 @@ const app = new Vue({
 
            // POST words
 
-       		const query = {word: this.word,
+       		const query = {
+       			word: this.word,
        			author: this.author,
-       			text: this.text
+       			text: this.text,
+       			time_period: this.timePeriod,
+       			search_type: this.searchType
        		}
 
        		const res = await axios.post('search/', query)
+       			console.log(res)
        		   this.searchDisplay = res.data
 
+
+       		  if (this.searchType === 'Phrase'){
+
+
+				for (let text of this.searchDisplay){
+					
+					this.boldPhrase(text.sentences)
+
+				}
+       		  }
+
+		},
+
+		boldPhrase(texts){
+			const phrase = this.word
+			const phraseList = phrase.split(' ')
+		
+			// this.phrase = texts.map((sentence) => {
+			// 	const words = sentence.split(' ')
+			// 	return words.map((word, i) => ({
+			// 		class: (phraseList.join(' ') === [words[i]+' '+words[i+1]] ? 'red' : null),
+			// 		word: word
+			// 	}))
+			// })
+			
+			for (sentences of texts){
+				const sentenceTokens = sentences.toLowerCase().split(' ')	
+				const sentence = []
+				
+				let i = 0
+				
+				while (i < sentenceTokens.length-phraseList.length+1) {
+	    			const wordTokens = sentenceTokens.slice(i, i+phraseList.length)
+	    			const phrase = wordTokens.join(' ')
+	    			if (JSON.stringify(phraseList) === JSON.stringify(wordTokens)) {
+	    				for (let j=0; j<phraseList.length; j++) {
+	    					sentence.push({class: 'red', word: wordTokens[j]})
+	    					i += phraseList.length
+	    				}
+	    			} else {
+	    				sentence.push({class: '', word: wordTokens[0]})
+	    				i++
+	    			}
+	 
+	    		
+	    			
+				}
+				this.phrase.push(sentence)
+				console.log(this.phrase)
+			}
+			
 		},
 	},
+
 	mounted(){
 		this.grabAuthor()
 		this.grabText()
-
 	},
+
 })

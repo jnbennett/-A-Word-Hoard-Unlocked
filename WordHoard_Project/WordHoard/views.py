@@ -1,9 +1,11 @@
 from django.shortcuts import render, get_object_or_404
 from django.http import JsonResponse, HttpResponse
+from django.views.generic import TemplateView
 from rest_framework import viewsets
 from .models import Text, Author, Translator
 from .serializers import TextSerializer, AuthorSerializer, TranslatorSerializer
-from .search_functions import occurence, word_count
+from .search_functions import word_occurence, word_count, word_tokenize, phrase_occurence, phrase_count
+from collections import Counter
 import json
 
 class AuthorViewSet(viewsets.ModelViewSet):
@@ -27,44 +29,62 @@ class TextViewSet(viewsets.ModelViewSet):
 	queryset = Text.objects.all()
 	serializer_class = TextSerializer
 
+class HomePageView(TemplateView):
+	template_name = 'WordHoard/index.html'
+
+class SearchPageView(TemplateView):
+	template_name = 'WordHoard/search.html'
 
 def search(request):
 	
 	if request.method == 'POST':
 		data = json.loads(request.body)
-		# my_filters = {}
+		
 		text_keys = [item['pk'] for item in data['text']]
 		author_keys = [item['pk'] for item in data['author']]
-		# print(data)
-		# print(text_keys)
-		# print(author_keys)
-
+		time_period_keys = [item for item in data['time_period']]
+		
+		
+		if data['time_period']:
+			texts = Text.objects.filter(time_period__in=time_period_keys)
 		if data['author']:
 			texts = Text.objects.filter(author__in=author_keys)
-			# print(texts)
+			
 		if data['text']:
 			texts = Text.objects.filter(pk__in=text_keys)
-			# print(texts)
+		
 		search_results = []
 		for text in texts:
 			with open(text.txt_file.path) as f:
 				read = f.read()
 				# read = tokenize(read.lower())	
-				word_search = occurence(read, data['word'])
-				count = word_count(read, data['word'])
-				
-				results = {
-					'author': text.author.first_name +' '+ text.author.last_name,
-					'text': text.title,
-					'word': data.get('word'),
-					'sentences': word_search,
-					'count': count,
-					}
-				search_results.append(results)
-				print(results['author'])
+				word_search = word_occurence(read, data['word'])
+				count_word = word_count(read, data['word'])
+				phrase = phrase_occurence(read, data['word'])
+				# count_phrase= phrase_count(read, data['word'])
+				count_phrase = len(phrase)
+				if data['search_type']== 'Word':
+					results = {
+						'author': text.author.first_name +' '+ text.author.last_name,
+						'text': text.title,
+						'word': data.get('word'),
+						'sentences': word_search,
+						'word_count': count_word,
+						}
+					search_results.append(results)
+				if data['search_type'] == 'Phrase':
+					results = {
+						'author': text.author.first_name +' '+ text.author.last_name,
+						'text': text.title,
+						'word': data.get('word'),
+						'word_count': count_phrase,
+						'sentences': phrase,
+						}
+					search_results.append(results)
 		return JsonResponse(search_results, safe=False)
 	# return JsonResponse(search_results, safe=False)
 	return HttpResponse(201)
+	
 
 
 

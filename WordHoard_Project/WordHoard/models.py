@@ -43,15 +43,25 @@ class Text(models.Model):
 	]
 
 	TIME_PERIOD = [
-		('CLS', "The Classical Period (1200 BCE-455 CE)"),
-		('MED', "The Medieval Period (455-1485 CE)"),
-		('REN', "The Renaissance and Reformation (1485-1660)"),
-		("ENL", "The Englightenment (1660-1790)"),
-		("ROM", 'The Romantic Period (1790-1830)'),
-		("VIC", "The Victorian Period (1832-1901"),
-		('MOD', "The Modern Period (1914-1945)"),
-		("PM", "The PostModern Period (1945-Present Day)"),
-		('UNK', 'Unknown')
+		# ('CLS', "The Classical Period (1200 BCE-455 CE)"),
+		# ('MED', "The Medieval Period (455-1485 CE)"),
+		# ('REN', "The Renaissance and Reformation (1485-1660)"),
+		# ("ENL", "The Englightenment (1660-1790)"),
+		# ("ROM", 'The Romantic Period (1790-1830)'),
+		# ("VIC", "The Victorian Period (1832-1901"),
+		# ('MOD', "The Modern Period (1914-1945)"),
+		# ("PM", "The PostModern Period (1945-Present Day)"),
+		# ('UNK', 'Unknown')
+
+		("The Classical Period (1200 BCE-455 CE)", "The Classical Period (1200 BCE-455 CE)"),
+		("The Medieval Period (455-1485 CE)", "The Medieval Period (455-1485 CE)"),
+		("The Renaissance and Reformation (1485-1660)", "The Renaissance and Reformation (1485-1660)"),
+		("The Englightenment (1660-1790)", "The Englightenment (1660-1790)"),
+		('The Romantic Period (1790-1830)', 'The Romantic Period (1790-1830)'),
+		("The Victorian Period (1832-1901", "The Victorian Period (1832-1901"),
+		("The Modern Period (1914-1945)", "The Modern Period (1914-1945)"),
+		("The PostModern Period (1945-Present Day)", "The PostModern Period (1945-Present Day)"),
+		('Unknown', 'Unknown')
 
 	]
 

@@ -1,0 +1,135 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+	    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+	<title>A Word-Hoard Unlocked</title>
+
+	<link href="https://fonts.googleapis.com/css?family=Cinzel+Decorative|UnifrakturCook:700|UnifrakturMaguntia&display=swap" rel="stylesheet">
+	<link rel="stylesheet" href="https://unpkg.com/vue-multiselect@2.1.0/dist/vue-multiselect.min.css">
+	  <!-- Compiled and minified CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+	<link rel='stylesheet' href='{% static "WordHoard/css/stylesheet.css" %}'>
+	
+</head>
+<body>
+	<div id='app'>
+		<div id='banner' >
+			<div id='logo'>
+				<h1 id='title'>${ message }</h1>
+				<div>
+					 <input
+							type='text' 
+							id='searchWord'
+							size='100'
+							placeholder="Search" 
+							v-model='word'
+						>
+			
+					<div>
+		    			<button class="waves-effect waves-light btn"
+		    		
+		    				v-on:click="searchWords">Search
+		    			</button>
+		  			</div>
+		  		</div>
+			</div>
+		</div>
+		
+		<div class='container'>
+			<div class='row'>
+				<div class='col s12'>
+					<multiselect v-model='timePeriod' 
+						placeholder='Select time period'
+						v-bind:options='timePeriods'
+						:custom-label='timePeriodLabel'
+						@select='getAuthors'
+						@select='getTexts'
+						:multiple='true'
+						:close-on-select="false" 
+						:clear-on-select="false"
+						:preserve-search="true"
+						:preselect-first="true"
+						@hook:updated='getAuthors'
+						@hook:updated='getTexts'
+						>
+					</multiselect>	
+				</div>
+				<div class='col s12'>
+					<multiselect v-model='author' 
+						placeholder='Select author'
+						v-bind:options='currentAuthors'
+						:custom-label='authorLabel'
+						@select='getTexts'
+						:multiple='true'
+						track-by='pk'
+						:close-on-select="false" 
+						:clear-on-select="false"
+						:preserve-search="true"
+						:preselect-first="true"
+						@hook:updated='getTexts'
+						>
+					</multiselect>	
+				</div>
+				<div class='col s12'>
+					<multiselect v-model='text' 
+						id='textList'
+						placeholder='Select text'
+						v-bind:options='currentTexts'
+						:custom-label='textLabel'
+						:multiple='true'
+						:close-on-select="false" 
+						:clear-on-select="false"
+						:preserve-search="true"
+						:preselect-first="true"
+						track-by='title'
+						>
+					</multiselect>
+				</div>
+					
+			</div>
+
+			<div id='search_container'>
+				<div class='displaySearch'>
+					<h2> ${ searchDisplay['word'] }</h2>
+				</div>
+				<div class='displaySearch'>
+					<div v-for='text in searchDisplay'>
+						<p>
+							${text.author} 
+						</p>
+						<p>
+							${ text.text }
+						</p>
+						 <li v-for='sentences in text.sentences'>
+						 	${ sentences }
+						</li>
+						<li v-for='sentences in text.phrase'>
+							${sentences}
+						</li>
+						<p>
+							Word Count: ${ text.word_count }
+
+							Phrase Count: ${ text.phrase_count }
+						</p>
+					</div>
+				</div>
+			</div>
+		
+		
+		</div>
+	</div>
+	
+
+	<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+	<script src="https://unpkg.com/vue-multiselect@2.1.0"></script>
+	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+	<script src='{% static "WordHoard/js/script.js" %}'></script>
+</body>
+</html>

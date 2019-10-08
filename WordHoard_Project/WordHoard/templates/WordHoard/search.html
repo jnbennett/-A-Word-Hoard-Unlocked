@@ -1,0 +1,39 @@
+{% extends 'WordHoard/base.html' %}
+
+{% block content %}
+	<div class='container'>
+			<div id='search_container'>
+				<div class='displaySearch'>
+					<h2> ${ searchDisplay['word'] }</h2>
+				</div>
+				<div class='displaySearch'>
+					<div v-for='text in searchDisplay'>
+						<p>
+							${text.author} 
+						</p>
+						<p>
+							${ text.text }
+						</p>
+
+						<li v-for='sentence in text.sentences'>
+							<span v-for='word in sentence.split(" ")' v-bind:class="{red: word === text.word}"> ${word}</span>
+						</li>
+						
+					
+						<ul v-if='text.sentences.length === 0'>
+						{# <li v-for='sentence in text.phrase'>
+							<span v-for='word in sentence.split(" ")' v-bind:class="{red: word === text.word}"> ${word} </span>
+						</li>
+						</ul> #}
+				
+						<p v-if='text.sentences.length > 0'>
+							Word Count: ${ text.word_count }
+						</p>
+						<p v-if='text.sentences.length === 0'>
+							Phrase Count: ${ text.phrase_count }
+						</p>
+					</div>
+				</div>
+			</div>
+		</div>
+{% endblock %}

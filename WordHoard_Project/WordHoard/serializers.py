@@ -8,6 +8,12 @@ class TextSerializer(serializers.HyperlinkedModelSerializer):
 	class Meta:
 		model = Text
 		fields = ('pk', 'title', 'author', 'publication_date', 'time_period', 'genre', 'translation', 'translator', 'txt_file')
+	
+	def to_representation(self, instance):
+	    ret = super().to_representation(instance)
+	    ret['time_period'] = instance.get_time_period_display()
+	    ret['genre'] = instance.get_genre_display()
+	    return ret
 
 class AuthorSerializer(serializers.HyperlinkedModelSerializer):
 	texts = serializers.HyperlinkedRelatedField(many=True, read_only=True, view_name='WordHoard:text-detail')
