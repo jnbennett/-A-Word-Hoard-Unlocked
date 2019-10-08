@@ -50,7 +50,7 @@ html, body {
 	font-weight: bold;
 }
 
-.input-group{
+#homeSearch{
 	margin-top: 9em;
 	width: 50%;
 	border-radius: 5000px 0 0 5000px;
@@ -64,6 +64,16 @@ html, body {
 
 #search_container{
 	min-height: 100px;
+}
+
+#simpleSearchBar{
+	max-height:60px;
+	background-color: #ebebe0;
+}
+
+#resultsSearch{
+	width: 50%;
+	margin-top: 10px;
 }
 
 #button-addon2{

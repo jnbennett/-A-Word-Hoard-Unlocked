@@ -76,11 +76,12 @@
 								v-model:value='word'
 								>
 						<div class="input-group-append mb-3" id='searchButton'>
-			    			<button class="btn btn-outline-secondary shadow" 
+			    			<a href='results'
+			    				class="btn btn-secondary btn active shadow" 
+			    				role="button" aria-pressed="true"
 			    				v-on:click="searchWords"
-			    				type='button'
 			    				>Search
-			    			</button>
+			    			</a>
 			  			</div>
 					</div>
 				</div>

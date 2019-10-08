@@ -1,39 +1,68 @@
 {% extends 'WordHoard/base.html' %}
 
 {% block content %}
-	<div class='container'>
-			<div id='search_container'>
-				<div class='displaySearch'>
-					<h2> ${ searchDisplay['word'] }</h2>
-				</div>
-				<div class='displaySearch'>
-					<div v-for='text in searchDisplay'>
-						<p>
-							${text.author} 
-						</p>
-						<p>
-							${ text.text }
-						</p>
+	<div class=' d-flex justify-content-center row border-bottom' id='simpleSearchBar'>
 
-						<li v-for='sentence in text.sentences'>
-							<span v-for='word in sentence.split(" ")' v-bind:class="{red: word === text.word}"> ${word}</span>
-						</li>
-						
-					
-						<ul v-if='text.sentences.length === 0'>
-						{# <li v-for='sentence in text.phrase'>
-							<span v-for='word in sentence.split(" ")' v-bind:class="{red: word === text.word}"> ${word} </span>
-						</li>
-						</ul> #}
+				<div class="input-group mb-3 align-self-baseline" id="resultsSearch">
+					<div class="input-group-prepend" id='searchBy'>
+						<select v-model:value='searchType' class="custom-select shadow" 
+						  		id='inputGroupSelect03'>
 				
-						<p v-if='text.sentences.length > 0'>
-							Word Count: ${ text.word_count }
-						</p>
-						<p v-if='text.sentences.length === 0'>
-							Phrase Count: ${ text.phrase_count }
-						</p>
+						<option value='Word'>Word</option>
+						<option value='Phrase'>Phrase</option>
+						    
+						</select>
+					</div> 
+						<input 	class='form-control shadow'
+								type='text' 
+								id='searchWord'
+								size='100'
+								placeholder="Search" 
+								v-model:value='word'
+								>
+					<div class="input-group-append mb-3" id='searchButton'>
+				    	<button class="btn btn-outline-secondary shadow" 
+				    			v-on:click="searchWords"
+				    			type='button'
+				    			>Search
+				    	</button>
+				  	</div>
+				</div>
+		
+				
+	</div>
+			
+			<div class='container'>
+				<div id='search_container'>
+					<div class='displaySearch'>
+						<h2> ${ searchDisplay['word'] }</h2>
+					</div>
+					<div class='displaySearch'>
+						<div v-for='text in searchDisplay'>
+							<p>
+								${text.author} 
+							</p>
+							<p>
+								${ text.text }
+							</p>
+
+							<ul v-if='searchType === "Word"'>
+								<li v-for='sentence in text.sentences'>
+									<span v-for='word in sentence.split(" ")' v-bind:class="{red: word === text.word}"> ${word}</span>
+								</li>
+							</ul>
+							<ul v-else>
+								<li v-for='sentence in phrase'>
+									<span v-for='word in sentence' v-bind:class="word.class"> ${word.word}</span>
+								</li>
+							</ul>
+							
+							<p>
+								Word Count: ${ text.word_count }
+							</p>
+							
+						</div>
 					</div>
 				</div>
 			</div>
-		</div>
 {% endblock %}
