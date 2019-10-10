@@ -1,6 +1,7 @@
 axios.defaults.xsrfCookieName = 'csrftoken'
 axios.defaults.xsrfHeaderName = "X-CSRFTOKEN"
 Vue.component('multiselect', window.VueMultiselect.default)
+const base_url = 'http://127.0.0.1:8000/'
 
 const app = new Vue({
 	el: '#app',
@@ -19,12 +20,13 @@ const app = new Vue({
 		currentTexts:[],
 		currentAuthors:[],
 		searchType: 'Phrase',
-		phrase: [],
+		phrase: {}, // {title: [sentences]}
+		loading: false
 	},
 	methods: {
 
 		grabAuthor: async function(){
-			const response = await axios.get('api/authors/')
+			const response = await axios.get(base_url+'api/authors/')
 			let authorList = response.data
 
 			this.authors = authorList.map( (elem) => ({
@@ -105,7 +107,7 @@ const app = new Vue({
 		},
 
 		grabText: async function(){
-			const response = await axios.get('api/texts/')
+			const response = await axios.get(base_url+'api/texts/')
 			let textList = response.data
 
 			this.texts = textList.map( (elem) => ({
@@ -149,9 +151,10 @@ const app = new Vue({
        			time_period: this.timePeriod,
        			search_type: this.searchType
        		}
+       		this.loading = true
 
-       		const res = await axios.post('search/', query)
-       			console.log(res)
+       		const res = await axios.post(base_url+'search/', query)
+       			
        		   this.searchDisplay = res.data
 
 
@@ -160,14 +163,16 @@ const app = new Vue({
 
 				for (let text of this.searchDisplay){
 					
-					this.boldPhrase(text.sentences)
+					this.boldPhrase(text)
 
 				}
        		  }
-
+       		  this.loading = false
 		},
 
-		boldPhrase(texts){
+		boldPhrase(text){
+			const texts = text.sentences
+			
 			const phrase = this.word
 			const phraseList = phrase.split(' ')
 		
@@ -178,6 +183,8 @@ const app = new Vue({
 			// 		word: word
 			// 	}))
 			// })
+			console.log(text.text)
+			this.phrase[text.text] = []
 			
 			for (sentences of texts){
 				const sentenceTokens = sentences.toLowerCase().split(' ')	
@@ -185,7 +192,7 @@ const app = new Vue({
 				
 				let i = 0
 				
-				while (i < sentenceTokens.length-phraseList.length+1) {
+				while (i < sentenceTokens.length+1-phraseList.length+1) {
 	    			const wordTokens = sentenceTokens.slice(i, i+phraseList.length)
 	    			const phrase = wordTokens.join(' ')
 	    			if (JSON.stringify(phraseList) === JSON.stringify(wordTokens)) {
@@ -197,12 +204,14 @@ const app = new Vue({
 	    				sentence.push({class: '', word: wordTokens[0]})
 	    				i++
 	    			}
-	 
+
+	    		
 	    		
 	    			
 				}
-				this.phrase.push(sentence)
-				console.log(this.phrase)
+				
+				this.phrase[text.text].push(sentence)
+				
 			}
 			
 		},

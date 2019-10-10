@@ -57,7 +57,6 @@
 			</div>
 				<div class="d-flex justify-content-center">
 					
-
 					<div class="input-group mb-3 align-self-baseline" id='homeSearch'>
 						<div class="input-group-prepend" id='searchBy'>
 						  <select v-model:value='searchType' class="custom-select shadow" 
@@ -86,17 +85,22 @@
 				</div>
 			<div class='container'>
 				<div id='search_container'>
-					<div class='displaySearch'>
+					<div  class="d-flex justify-content-center" v-if='loading'>
+						<div  class="spinner-border" role="status">
+							<span class="sr-only">Loading...</span>
+						</div>
+					</div>
+					<div v-else class='displaySearch'>
 						<h2> ${ searchDisplay['word'] }</h2>
 					</div>
 					<div class='displaySearch'>
 						<div v-for='text in searchDisplay'>
-							<p>
-								${text.author} 
-							</p>
-							<p>
-								${ text.text }
-							</p>
+							<h3>
+								Author: ${text.author} 
+							</h3>
+							<h3>
+								Title: ${ text.text }
+							</h3>
 
 							<ul v-if='searchType === "Word"'>
 								<li v-for='sentence in text.sentences'>
@@ -104,14 +108,14 @@
 								</li>
 							</ul>
 							<ul v-else>
-								<li v-for='sentence in phrase'>
+								<li v-for='sentence in phrase[text.text]'>
 									<span v-for='word in sentence' v-bind:class="word.class"> ${word.word}</span>
 								</li>
 							</ul>
 							
-							<p>
-								Word Count: ${ text.word_count }
-							</p>
+							<h5>
+								Number of occurences: ${ text.word_count }
+							</h5>
 							
 						</div>
 					</div>
