@@ -5,11 +5,7 @@ html, body {
 
 #banner{
 	background-color: #626b80;
-	/*#546e7a;*/
-	/*#3b465e;*/
-	/*#545875;*/
-	/*#464a6b;*/
-	/*#5077A7;*/
+	
 	height: 200px;
 	width: 100%;
 
@@ -62,6 +58,7 @@ html, body {
 .displaySearch{
 	font-family: 'Playfair Display', Helvetica;
 	margin-top: 5em;
+	margin-bottom: 5em;
 }
 
 .red{
@@ -83,6 +80,7 @@ html, body {
 
 #search_container{
 	min-height: 100px;
+	bottom-margin: 2em;
 }
 
 #simpleSearchBar{

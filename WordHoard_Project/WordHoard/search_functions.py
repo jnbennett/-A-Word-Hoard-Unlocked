@@ -16,21 +16,8 @@ def word_occurence(text, word):
 
 	return sent_list
 		
-	# [word_tokenize(sents) for word in sents]
-	# if word in  sents:
-	# 	return sents
 
-	
 
-	# # return phrase.concordance(word)
-	# return phrase.concordance_list(word)
-
-# def analogous(text, word):
-# 	return text.similar(word)
-	
-
-# def shared_context(text, word_list):
-# 	return text.common_contexts(word_list)
 def phrase_occurence(text, phrase):
 	# words = [word_tokenize(word) for word in sent_tokenize(text)]
 	sentences = sent_tokenize(text)
@@ -53,7 +40,16 @@ def phrase_count(text, phrase):
 	"""
 	token = sent_tokenize(text)
 	return token.count(phrase)
+
 # def tokenize(text):
 # 	return nltk.word_tokenize(text)
 
 # nltk.TextCollection can import multiples texts to analyze
+
+
+# def analogous(text, word):
+# 	return text.similar(word)
+	
+
+# def shared_context(text, word_list):
+# 	return text.common_contexts(word_list)

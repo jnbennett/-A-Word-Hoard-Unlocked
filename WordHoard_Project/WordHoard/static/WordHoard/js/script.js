@@ -204,9 +204,6 @@ const app = new Vue({
 	    				sentence.push({class: '', word: wordTokens[0]})
 	    				i++
 	    			}
-
-	    		
-	    		
 	    			
 				}
 				
